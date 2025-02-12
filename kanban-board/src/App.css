@@ -1412,6 +1412,169 @@ input:checked + .toggle-slider:before {
   background-color: rgba(255, 255, 255, 0.1);
 }
 
+.auth-buttons {
+  display: flex;
+  gap: 1rem;
+}
+
+.login-button,
+.register-button {
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+}
+
+.login-button {
+  background: #ffffff;
+  color: #c17f59;
+  border: 1px solid #c17f59;
+}
+
+.register-button {
+  background: #c17f59;
+  color: white;
+}
+
+.login-button:hover {
+  background: #f8f0eb;
+}
+
+.register-button:hover {
+  background: #a66b4a;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-right: 1rem;
+}
+
+.user-name {
+  color: #4a3c32;
+  font-weight: 500;
+}
+
+.logout-button {
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  border: 1px solid #c17f59;
+  background: transparent;
+  color: #c17f59;
+  cursor: pointer;
+  font-size: 0.8rem;
+  transition: all 0.2s ease;
+}
+
+.logout-button:hover {
+  background: #f8f0eb;
+}
+
+.auth-message {
+  text-align: center;
+  color: #4a3c32;
+  margin-top: 2rem;
+  font-size: 1.2rem;
+}
+
+/* Dark mode styles */
+.dark-mode .user-name {
+  color: #ffffff;
+}
+
+.dark-mode .logout-button {
+  border-color: #ffffff;
+  color: #ffffff;
+}
+
+.dark-mode .logout-button:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.dark-mode .auth-message {
+  color: #ffffff;
+}
+
+/* Auth Form Styling */
+.auth-panel {
+  max-width: 400px;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  padding: 1rem 0;
+}
+
+.auth-form .input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.auth-form input {
+  width: 100%;
+  padding: 0.875rem 1rem;
+  border: 1.5px solid rgba(193, 127, 89, 0.2);
+  border-radius: 8px;
+  font-size: 0.95rem;
+  background: #ffffff;
+  box-sizing: border-box;
+}
+
+.auth-submit-button {
+  width: 100%;
+  padding: 1rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: white;
+  background: linear-gradient(135deg, #c17f59 0%, #a66b4a 100%);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(193, 127, 89, 0.2);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.auth-submit-button:hover {
+  background: linear-gradient(135deg, #a66b4a 0%, #8b5b3d 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(193, 127, 89, 0.3);
+}
+
+.error-message {
+  color: #ff4444;
+  background: rgba(255, 68, 68, 0.1);
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+}
+
+/* Dark mode adjustments */
+.dark-mode .auth-form input {
+  background: #3d3d3d;
+  border-color: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+}
+
+.dark-mode .auth-submit-button {
+  background: linear-gradient(135deg, #8b5b3d 0%, #6b4730 100%);
+}
+
+.dark-mode .auth-submit-button:hover {
+  background: linear-gradient(135deg, #7a503a 0%, #5a3c2a 100%);
+}
+
+.dark-mode .error-message {
+  background: rgba(255, 68, 68, 0.2);
+}
+
 
 
 

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-function ModalPanel({ setShowModal, tasks, setTasks }) {
+function ModalPanel({ setShowModal, onCreateTask }) {
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [status, setStatus] = useState('1');
@@ -59,10 +59,9 @@ function ModalPanel({ setShowModal, tasks, setTasks }) {
         };
     }, [setShowModal]);
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         const newTask = {
-            id: tasks.length + 1,
             title,
             description,
             status: Number(status),
@@ -70,10 +69,15 @@ function ModalPanel({ setShowModal, tasks, setTasks }) {
             startDate: startDate || null,
             dueDate: dueDate || null,
             labels,
-            subtasks,
+            subtasks
         };
-        setTasks([...tasks, newTask]);
-        setShowModal(false);
+
+        try {
+            await onCreateTask(newTask);
+            setShowModal(false);
+        } catch (error) {
+            console.error('Error creating task:', error);
+        }
     };
 
     return (

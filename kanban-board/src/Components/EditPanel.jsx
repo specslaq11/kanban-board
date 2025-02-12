@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-function EditPanel({ setEditPanel, tasks, setTasks, task }) {
+function EditPanel({ setEditPanel, task, onUpdate }) {
     const [title, setTitle] = useState(task.title);
     const [description, setDescription] = useState(task.description);
     const [status, setStatus] = useState(task.status.toString());
@@ -25,12 +25,6 @@ function EditPanel({ setEditPanel, tasks, setTasks, task }) {
     }, []);
 
     const closePanel = () => {
-        setTasks(tasks.map(t => {
-            if (t.id === task.id) {
-                return { ...t, isEditing: false };
-            }
-            return t;
-        }));
         setEditPanel(false);
     };
 
@@ -70,29 +64,28 @@ function EditPanel({ setEditPanel, tasks, setTasks, task }) {
         ));
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         e.stopPropagation();
         
-        setTasks(tasks.map(t => {
-            if (t.id === task.id) {
-                return {
-                    ...t,
-                    title,
-                    description,
-                    status: Number(status),
-                    priority: Number(priority),
-                    startDate,
-                    dueDate,
-                    labels,
-                    subtasks,
-                    isEditing: false
-                };
-            }
-            return t;
-        }));
-        
-        setEditPanel(false);
+        const updatedTask = {
+            ...task,
+            title,
+            description,
+            status: Number(status),
+            priority: Number(priority),
+            startDate,
+            dueDate,
+            labels,
+            subtasks
+        };
+
+        try {
+            await onUpdate(task._id, updatedTask);
+            setEditPanel(false);
+        } catch (error) {
+            console.error('Error updating task:', error);
+        }
     };
 
     const handleOverlayClick = (e) => {

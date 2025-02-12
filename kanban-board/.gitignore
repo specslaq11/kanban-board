@@ -22,3 +22,20 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# dependencies
+/node_modules
+
+# production
+/dist
+/build
+
+# env files
+.env
+.env.local
+.env.development
+.env.production
+
+# misc
+.DS_Store
+*.pem

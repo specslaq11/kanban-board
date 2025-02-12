@@ -4,31 +4,95 @@ import Task from './Components/Task'
 import ModalPanel from './Components/ModalPanel'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 import Header from './Components/Header'
+import { AuthProvider, useAuth } from './contexts/AuthContext'
+import Login from './Components/Login'
+import Register from './Components/Register'
+import { api } from './services/api'
 
-function App() {
+function KanbanBoard() {
+  const { currentUser, token } = useAuth();
+  const [showModal, setShowModal] = useState(false)
+  const [darkMode, setDarkMode] = useState(() => {
+    const saved = localStorage.getItem('darkMode')
+    return saved ? JSON.parse(saved) : false
+  })
+  const [tasks, setTasks] = useState([]);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [showLogin, setShowLogin] = useState(false);
+  const [showRegister, setShowRegister] = useState(false);
+
+  // Fetch tasks when user logs in
+  useEffect(() => {
+    if (currentUser && token) {
+      api.getTasks(token)
+        .then(fetchedTasks => setTasks(fetchedTasks))
+        .catch(error => console.error('Error fetching tasks:', error));
+    } else {
+      // Clear tasks when user logs out
+      setTasks([]);
+    }
+  }, [currentUser, token]);
+
   const onDragStart = () => {
     document.body.classList.add('dragging');
   };
 
-  const onDragEnd = (result) => {
+  const onDragEnd = async (result) => {
     document.body.classList.remove('dragging');
     if (!result.destination) return;
     
     const { source, destination } = result;
     
     // Get the task that was dragged
-    const task = tasks.find(t => t.id === Number(result.draggableId));
+    const task = tasks.find(t => t._id === result.draggableId);
+    const updatedTask = { ...task, status: Number(destination.droppableId) };
     
-    // Update its status to the new column's id
+    // Optimistically update UI
     setTasks(tasks.map(t => {
-      if (t.id === task.id) {
-        return { ...t, status: Number(destination.droppableId) };
+      if (t._id === task._id) {
+        return updatedTask;
       }
       return t;
     }));
+
+    // Update in backend
+    try {
+      await api.updateTask(task._id, updatedTask, token);
+    } catch (error) {
+      console.error('Error updating task:', error);
+      // Revert on error
+      setTasks(tasks);
+    }
   };
 
-  const [columns, setColumns] = useState([
+  const handleDeleteTask = async (taskId) => {
+    try {
+      await api.deleteTask(taskId, token);
+      setTasks(tasks.filter(t => t._id !== taskId));
+    } catch (error) {
+      console.error('Error deleting task:', error);
+    }
+  };
+
+  const handleUpdateTask = async (taskId, updates) => {
+    try {
+      const updatedTask = await api.updateTask(taskId, updates, token);
+      setTasks(tasks.map(t => t._id === taskId ? updatedTask : t));
+    } catch (error) {
+      console.error('Error updating task:', error);
+    }
+  };
+
+  const handleCreateTask = async (newTask) => {
+    try {
+      const createdTask = await api.createTask(newTask, token);
+      setTasks([...tasks, createdTask]);
+    } catch (error) {
+      console.error('Error creating task:', error);
+    }
+  };
+
+  const [columns] = useState([
     {
       id: 1,
       title: 'To Do',
@@ -44,47 +108,16 @@ function App() {
       title: 'Done',
       items: []
     }
-  ])
-
-  
-  const [tasks, setTasks] = useState(() => {
-    const savedTasks = localStorage.getItem('tasks');
-    return savedTasks ? JSON.parse(savedTasks) : [
-      {
-        id: 1,
-        title: "Learn React",
-        description: "Study React fundamentals",
-        status: 1
-      },
-      {
-        id: 2,
-        title: "Build Project",
-        description: "Create a Kanban board",
-        status: 2
-      }
-    ];
-  });
+  ]);
 
   useEffect(() => {
-    localStorage.setItem('tasks', JSON.stringify(tasks));
-  }, [tasks]);
-
-  const [showModal, setShowModal] = useState(false)
-  const [darkMode, setDarkMode] = useState(() => {
-    const saved = localStorage.getItem('darkMode')
-    return saved ? JSON.parse(saved) : false
-  })
-
-  useEffect(() => {
-    localStorage.setItem('darkMode', JSON.stringify(darkMode))
+    localStorage.setItem('darkMode', JSON.stringify(darkMode));
     if (darkMode) {
-      document.body.classList.add('dark-mode')
+      document.body.classList.add('dark-mode');
     } else {
-      document.body.classList.remove('dark-mode')
+      document.body.classList.remove('dark-mode');
     }
-  }, [darkMode])
-
-  const [searchQuery, setSearchQuery] = useState('');
+  }, [darkMode]);
 
   // Filter tasks based on search query
   const filteredTasks = tasks.filter(task => {
@@ -97,19 +130,44 @@ function App() {
     );
   });
 
-  const handleSearch = (query) => {
-    setSearchQuery(query);
-  };
+  if (!currentUser) {
+    return (
+      <div className={`kanban-board ${darkMode ? 'dark-mode' : ''}`}>
+        <Header 
+          onSearch={() => {}}
+          darkMode={darkMode}
+          setDarkMode={setDarkMode}
+          setShowModal={setShowModal}
+          setShowLogin={setShowLogin}
+          setShowRegister={setShowRegister}
+        />
+        {showLogin && <Login onClose={() => setShowLogin(false)} />}
+        {showRegister && <Register onClose={() => setShowRegister(false)} />}
+        <div className="auth-message">
+          Please log in or register to view your tasks
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className={`kanban-board ${darkMode ? 'dark-mode' : ''}`}>
       <Header 
-        onSearch={handleSearch}
+        onSearch={setSearchQuery}
         darkMode={darkMode}
         setDarkMode={setDarkMode}
         setShowModal={setShowModal}
+        setShowLogin={setShowLogin}
+        setShowRegister={setShowRegister}
       />
-      {showModal && <ModalPanel setShowModal={setShowModal} tasks={tasks} setTasks={setTasks} />}
+      {showModal && (
+        <ModalPanel 
+          setShowModal={setShowModal} 
+          tasks={tasks} 
+          setTasks={setTasks}
+          onCreateTask={handleCreateTask}
+        />
+      )}
       <DragDropContext onDragStart={onDragStart} onDragEnd={onDragEnd}>
         <div className="columns-container">
           {columns.map((column) => (
@@ -129,8 +187,8 @@ function App() {
                       .filter(task => task.status === column.id)
                       .map((task, index) => (
                         <Draggable 
-                          key={task.id} 
-                          draggableId={task.id.toString()} 
+                          key={task._id} 
+                          draggableId={task._id.toString()} 
                           index={index}
                           isDragDisabled={task.isEditing || false}
                         >
@@ -145,9 +203,8 @@ function App() {
                                 columns={columns}
                                 tasks={tasks}
                                 setTasks={setTasks}
-                                onDelete={(taskId) => {
-                                  setTasks(tasks.filter(t => t.id !== taskId));
-                                }}
+                                onDelete={handleDeleteTask}
+                                onUpdate={handleUpdateTask}
                               />
                             </div>
                           )}
@@ -162,7 +219,16 @@ function App() {
         </div>
       </DragDropContext>
     </div>
-  )
+  );
 }
 
-export default App
+// Wrap the KanbanBoard with AuthProvider
+function App() {
+  return (
+    <AuthProvider>
+      <KanbanBoard />
+    </AuthProvider>
+  );
+}
+
+export default App;

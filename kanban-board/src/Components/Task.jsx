@@ -1,13 +1,13 @@
-import EditPanel from '../Components/EditPanel';
+import EditPanel from './EditPanel';
 import { useState, useEffect } from 'react';
 
-function Task({ task, columns, onStatusChange, onDelete, tasks, setTasks }) {
+function Task({ task, columns, onStatusChange, onDelete, onUpdate, tasks, setTasks }) {
     const [editPanel, setEditPanel] = useState(false);
 
     // Update task's isEditing property when edit panel opens/closes
     useEffect(() => {
         setTasks(tasks.map(t => {
-            if (t.id === task.id) {
+            if (t._id === task._id) {
                 return { ...t, isEditing: editPanel };
             }
             return t;
@@ -35,19 +35,23 @@ function Task({ task, columns, onStatusChange, onDelete, tasks, setTasks }) {
         return (completed / task.subtasks.length) * 100;
     };
 
-    const toggleSubtask = (subtaskIndex) => {
-        const updatedTasks = tasks.map(t => {
-            if (t.id === task.id) {
-                const updatedSubtasks = [...t.subtasks];
-                updatedSubtasks[subtaskIndex] = {
-                    ...updatedSubtasks[subtaskIndex],
-                    completed: !updatedSubtasks[subtaskIndex].completed
-                };
-                return { ...t, subtasks: updatedSubtasks };
-            }
-            return t;
-        });
-        setTasks(updatedTasks);
+    const toggleSubtask = async (subtaskIndex) => {
+        const updatedSubtasks = [...task.subtasks];
+        updatedSubtasks[subtaskIndex] = {
+            ...updatedSubtasks[subtaskIndex],
+            completed: !updatedSubtasks[subtaskIndex].completed
+        };
+
+        const updatedTask = {
+            ...task,
+            subtasks: updatedSubtasks
+        };
+
+        try {
+            await onUpdate(task._id, updatedTask);
+        } catch (error) {
+            console.error('Error updating subtask:', error);
+        }
     };
 
     return (
@@ -61,7 +65,7 @@ function Task({ task, columns, onStatusChange, onDelete, tasks, setTasks }) {
                     className='delete-button' 
                     onClick={(e) => {
                         e.stopPropagation();
-                        onDelete(task.id);
+                        onDelete(task._id);
                     }}
                 >
                     ×
@@ -133,9 +137,8 @@ function Task({ task, columns, onStatusChange, onDelete, tasks, setTasks }) {
                 }}>
                     <EditPanel 
                         setEditPanel={setEditPanel} 
-                        tasks={tasks} 
-                        setTasks={setTasks} 
                         task={task}
+                        onUpdate={onUpdate}
                     />
                 </div>
             )}
