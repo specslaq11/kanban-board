@@ -1,0 +1,4 @@
+/* Import the styles from Login.css to maintain consistency */
+@import './Login.css';
+
+/* Add any Register-specific styles here if needed */ 

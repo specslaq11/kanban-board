@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { LoadingSpinner } from './LoadingSpinner';
-import './Register.css';
+import './register.css';
 
 function Register({ onClose }) {
     const [name, setName] = useState('');
