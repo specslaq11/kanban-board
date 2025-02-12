@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useEffect } from 'react';
+import config from '../config';
 
 const AuthContext = createContext();
 
@@ -13,12 +14,12 @@ export function AuthProvider({ children }) {
 
     useEffect(() => {
         if (token) {
-            fetch('http://localhost:5001/api/auth/me', {
+            fetch(`${config.apiUrl}/auth/me`, {
                 headers: {
                     'Authorization': `Bearer ${token}`,
                     'X-CSRF-TOKEN': getCsrfToken(),
                 },
-                credentials: 'include', // Include cookies
+                credentials: 'include',
             })
             .then(async res => {
                 if (!res.ok) {
@@ -55,7 +56,7 @@ export function AuthProvider({ children }) {
 
     const login = async (email, password) => {
         try {
-            const res = await fetch('http://localhost:5001/api/auth/login', {
+            const res = await fetch(`${config.apiUrl}/auth/login`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -80,7 +81,7 @@ export function AuthProvider({ children }) {
 
     const register = async (name, email, password) => {
         try {
-            const res = await fetch('http://localhost:5001/api/auth/register', {
+            const res = await fetch(`${config.apiUrl}/auth/register`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -110,7 +111,7 @@ export function AuthProvider({ children }) {
 
     const logout = async () => {
         try {
-            await fetch('http://localhost:5001/api/auth/logout', {
+            await fetch(`${config.apiUrl}/auth/logout`, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`,
