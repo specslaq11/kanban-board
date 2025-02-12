@@ -8,6 +8,7 @@
   box-sizing: border-box;
   background-color: #fff8f3;
   overflow: hidden; /* Prevent scrolling on main container */
+  padding-top: 80px; /* Header height + padding */
 }
 
 .kanban-title {
@@ -36,7 +37,7 @@
   flex-direction: column;
   background: #fffbf8;
   border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(165, 142, 130, 0.1);
+  box-shadow: 0 2px 8px rgba(165, 142, 130, 0.2);
   max-height: 90%;
   overflow-y: auto;
 }
@@ -53,11 +54,11 @@
 .items-container {
   flex: 1;
   overflow-y: auto;
-  padding: 1rem;
+  padding: clamp(0.75rem, 2vw, 1.5rem);
   display: grid;
   grid-auto-flow: row;
   grid-auto-rows: min-content;
-  gap: 1rem;
+  gap: clamp(0.75rem, 2vw, 1.5rem);
   min-height: 100px;
 }
 
@@ -81,37 +82,214 @@
 
 /* Item styling */
 .item {
-  width: 100%;
-  box-sizing: border-box;
-  grid-column: 1;
-  transform-origin: top left;
-  background: #fffbf8;
-  border: 1px solid #f0e6e0;
-  border-radius: 8px;
-  padding: 1.2rem;
-  padding-top: 2.5rem;
-  box-shadow: 0 2px 4px rgba(165, 142, 130, 0.06);
+  background: #ffffff;
+  border-radius: 12px;
+  padding: clamp(1rem, 2vw, 1.5rem);
+  box-shadow: 0 2px 8px rgba(165, 142, 130, 0.15);
+  border: 1px solid rgba(193, 127, 89, 0.15);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
   position: relative;
-  cursor: grab;
-  user-select: none;
+  cursor: pointer;
 }
 
 .item:hover {
-  box-shadow: 0 4px 8px rgba(165, 142, 130, 0.1);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.item h3 {
-  margin: 0 0 0.8rem 0;
-  font-size: 1rem;
-  color: #4a3c32;
+.task-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.task-content h3 {
+  font-size: 1.1rem;
   font-weight: 600;
+  color: #2d2d2d;
+  margin: 0;
+  line-height: 1.4;
 }
 
-.item p {
+.task-content p {
+  font-size: 0.95rem;
+  color: #666;
   margin: 0;
-  color: #786d64;
-  font-size: 0.9rem;
   line-height: 1.5;
+}
+
+/* Labels styling in task card */
+.task-labels {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.task-labels .label {
+  font-size: 0.75rem;
+  padding: 0.2rem 0.6rem;
+  border-radius: 20px;
+  font-weight: 500;
+  letter-spacing: 0.2px;
+}
+
+/* Subtasks styling in task card */
+.task-subtasks {
+  background: rgba(0, 0, 0, 0.02);
+  border-radius: 8px;
+  padding: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.task-subtasks .subtask-item {
+  padding: 0.5rem;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.8);
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.9rem;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.task-subtasks .subtask-item:last-child {
+  margin-bottom: 0;
+}
+
+.task-subtasks input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  accent-color: #c17f59;
+}
+
+/* Dates styling */
+.task-dates {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.date {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.8rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: 16px;
+  background: rgba(193, 127, 89, 0.1);
+  color: #8b5b3d;
+}
+
+.delete-button {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  background: none;
+  border: none;
+  color: #999;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.delete-button:hover {
+  background: rgba(255, 0, 0, 0.1);
+  color: #ff4444;
+}
+
+/* Dark mode adjustments */
+.dark-mode .item {
+  background: #2d2d2d;
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.dark-mode .task-content h3 {
+  color: #ffffff;
+}
+
+.dark-mode .task-content p {
+  color: #b0b0b0;
+}
+
+.dark-mode .task-subtasks {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.dark-mode .task-subtasks .subtask-item {
+  background: rgba(255, 255, 255, 0.02);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.dark-mode .task-dates {
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.dark-mode .date {
+  background: rgba(193, 127, 89, 0.2);
+  color: #e6b69e;
+}
+
+.dark-mode .delete-button {
+  color: #777;
+}
+
+.dark-mode .delete-button:hover {
+  background: rgba(255, 0, 0, 0.2);
+  color: #ff6666;
+}
+
+/* Progress bar for subtasks */
+.subtasks-progress {
+  width: 100%;
+  height: 4px;
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 2px;
+  margin-top: 0.5rem;
+}
+
+.progress-bar {
+  height: 100%;
+  background: #c17f59;
+  border-radius: 2px;
+  transition: width 0.3s ease;
+}
+
+.dark-mode .subtasks-progress {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* Hover effects */
+.item:active {
+  transform: translateY(0);
+  transition: transform 0.1s ease;
+}
+
+.subtask-item:hover {
+  background: rgba(255, 255, 255, 0.9);
+}
+
+.dark-mode .subtask-item:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* Priority indicator */
+.priority-indicator {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  border-top-left-radius: 12px;
+  border-bottom-left-radius: 12px;
 }
 
 /* Button styling */
@@ -179,101 +357,335 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 1000;
-  overflow: hidden;
-  pointer-events: all; /* Ensure modal captures all events */
+  backdrop-filter: blur(4px);
 }
 
 .modal-panel {
-  background: #fffbf8;
-  padding: clamp(1rem, 3vw, 2rem);
-  border-radius: 12px;
-  width: min(90%, 500px);
-  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 2rem;
+  width: 90%;
+  max-width: 600px;
   max-height: 90vh;
-  overflow: visible;
-  pointer-events: all; /* Ensure modal captures all events */
-  position: relative; /* Ensure modal stays above draggable items */
-  z-index: 1001; /* Higher than draggable items */
+  overflow-y: auto;
+  position: relative;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  animation: modalFadeIn 0.3s ease;
 }
 
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Modal Header */
 .modal-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid rgba(193, 127, 89, 0.1);
 }
 
-.modal-panel form {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.modal-panel input,
-.modal-panel select,
-.modal-panel textarea {
-  padding: 0.8rem;
-  border: 1px solid #e6d5c9;
-  border-radius: 6px;
-  font-size: 0.95rem;
-  width: 100%;
-  box-sizing: border-box;
-  background-color: #fff;
-}
-
-.modal-panel button {
-  padding: 0.8rem 1.5rem;
-  border: none;
-  border-radius: 6px;
-  background-color: #c17f59;
-  color: white;
-  font-size: 0.95rem;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-}
-
-.modal-panel button:hover {
-  background-color: #a66c4a;
-}
-
-.modal-panel button:active {
-  background-color: #8f5c3f;
+.modal-header h2 {
+  font-size: 1.5rem;
+  color: #2d2d2d;
+  margin: 0;
+  font-weight: 600;
 }
 
 .close-button {
   background: none;
   border: none;
   font-size: 1.5rem;
-  color: #786d64;
+  color: #666;
   cursor: pointer;
   padding: 0.5rem;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
 }
 
 .close-button:hover {
+  background: rgba(0, 0, 0, 0.05);
+  color: #ff4444;
+}
+
+/* Modal Panel Form Layout - Updated */
+.modal-panel form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  position: relative;
+  padding: 0.5rem 0 1rem 0;
+  max-width: 100%;
+}
+
+/* Input Groups - Updated */
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  width: 100%;
+}
+
+.input-group label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #4a4a4a;
+  margin-bottom: -0.25rem;
+}
+
+/* Form Elements - Updated */
+.modal-panel input[type="text"],
+.modal-panel textarea,
+.modal-panel select,
+.modal-panel input[type="date"],
+.modal-panel input[type="number"] {
+  width: 100%;
+  padding: 0.875rem 1rem;
+  border: 1.5px solid rgba(193, 127, 89, 0.2);
+  border-radius: 8px;
+  font-size: 0.95rem;
+  background: #ffffff;
+  box-sizing: border-box;
+}
+
+/* Labels and Subtasks Sections - Updated */
+.labels-section,
+.subtasks-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  width: 100%;
+  padding: 1.5rem;
+  background: rgba(193, 127, 89, 0.05);
+  border-radius: 12px;
+  border: 1px solid rgba(193, 127, 89, 0.1);
+  box-sizing: border-box;
+}
+
+/* Label Input Group - Updated */
+.label-input-group {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 1rem;
+  width: 100%;
+  align-items: center;
+}
+
+/* Date inputs styling - Updated */
+.date-inputs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+  width: 100%;
+}
+
+.date-input {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.date-input label {
+  font-size: 0.9rem;
+  font-weight: 600;
   color: #4a3c32;
 }
 
-/* Add task button */
-.add-task-button {
-  padding: clamp(0.6rem, 1.5vw, 0.8rem) clamp(1rem, 2vw, 1.5rem);
-  background-color: #c17f59;
+.date-input input {
+  width: 100%;
+  padding: 0.875rem 1rem;
+  border: 1.5px solid rgba(193, 127, 89, 0.2);
+  border-radius: 8px;
+  font-size: 0.95rem;
+  background: #ffffff;
+  box-sizing: border-box;
+}
+
+/* Priority input styling - Updated */
+.priority-input {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  width: 100%;
+}
+
+.priority-input label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #4a3c32;
+}
+
+.priority-input select {
+  width: 100%;
+  padding: 0.875rem 1rem;
+  border: 1.5px solid rgba(193, 127, 89, 0.2);
+  border-radius: 8px;
+  font-size: 0.95rem;
+  background: #ffffff;
+  box-sizing: border-box;
+}
+
+/* Action Buttons Styling */
+.add-task-button,
+.update-button {
+  width: 100%;
+  padding: 1rem;
+  font-size: 1rem;
+  font-weight: 600;
   color: white;
+  background: linear-gradient(135deg, #c17f59 0%, #a66b4a 100%);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(193, 127, 89, 0.2);
+  margin-top: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.add-task-button:hover,
+.update-button:hover {
+  background: linear-gradient(135deg, #a66b4a 0%, #8b5b3d 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(193, 127, 89, 0.3);
+}
+
+.add-task-button:active,
+.update-button:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(193, 127, 89, 0.2);
+}
+
+/* Smaller Action Buttons */
+.add-label-btn,
+.add-subtask-btn {
+  padding: 0.75rem 1.25rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: white;
+  background: #c17f59;
   border: none;
   border-radius: 6px;
   cursor: pointer;
-  font-size: clamp(0.85rem, 1.5vw, 0.95rem);
-  transition: background-color 0.2s ease;
+  transition: all 0.2s ease;
+  white-space: nowrap;
 }
 
-.add-task-button:hover {
-  background-color: #a66c4a;
+.add-label-btn:hover,
+.add-subtask-btn:hover {
+  background: #a66b4a;
 }
 
+/* Dark Mode Adjustments */
+.dark-mode .input-group label,
+.dark-mode .date-input label,
+.dark-mode .priority-input label {
+  color: #e0e0e0;
+}
+
+.dark-mode .modal-panel input[type="text"],
+.dark-mode .modal-panel textarea,
+.dark-mode .modal-panel select,
+.dark-mode .modal-panel input[type="date"],
+.dark-mode .modal-panel input[type="number"],
+.dark-mode .date-input input,
+.dark-mode .priority-input select {
+  background: #3d3d3d;
+  border-color: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+}
+
+/* Dark Mode */
+.dark-mode .modal-panel {
+  background: #2d2d2d;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.dark-mode .modal-header {
+  border-bottom-color: rgba(255, 255, 255, 0.1);
+}
+
+.dark-mode .modal-header h2 {
+  color: #ffffff;
+}
+
+.dark-mode .close-button {
+  color: #999;
+}
+
+.dark-mode .close-button:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.dark-mode .labels-section,
+.dark-mode .subtasks-section {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.dark-mode .subtask-item {
+  background: #3d3d3d;
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Responsive adjustments - Updated */
+@media (max-width: 640px) {
+  .date-inputs {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .label-input-group {
+    grid-template-columns: 1fr auto;
+    gap: 0.75rem;
+  }
+
+  .modal-panel {
+    padding: 1.5rem;
+    width: 95%;
+  }
+}
+
+/* Scrollbar Styling */
+.modal-panel::-webkit-scrollbar {
+  width: 8px;
+}
+
+.modal-panel::-webkit-scrollbar-track {
+  background: rgba(193, 127, 89, 0.1);
+  border-radius: 4px;
+}
+
+.modal-panel::-webkit-scrollbar-thumb {
+  background: rgba(193, 127, 89, 0.3);
+  border-radius: 4px;
+}
+
+.modal-panel::-webkit-scrollbar-thumb:hover {
+  background: rgba(193, 127, 89, 0.5);
+}
+
+/* Add task button */
 .add-task-button:active {
   background-color: #8f5c3f;
 }
@@ -281,6 +693,723 @@
 body.dragging {
   overflow: hidden;
   touch-action: none;
+}
+
+/* Header styling */
+.header {
+  width: 100%;
+  height: 60px;
+  padding: 0 1rem;
+  background: #ffffff;
+  border-bottom: 1px solid rgba(193, 127, 89, 0.1);
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 100;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.header-content {
+  width: 100%;
+  max-width: 1400px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+/* Left section - Title */
+.header-left {
+  display: flex;
+  align-items: center;
+  flex: 0 1 auto;
+  min-width: 80px;
+}
+
+.header-title {
+  font-size: clamp(1rem, 2vw, 1.2rem);
+  color: #4a3c32;
+  margin: 0;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* Center section - Search */
+.header-center {
+  display: flex;
+  align-items: center;
+  flex: 1 1 200px;
+  position: relative;
+  min-width: 150px;
+}
+
+.search-container {
+  position: relative;
+  width: 100%;
+  flex-shrink: 3;
+}
+
+.search-icon {
+  position: absolute;
+  left: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 16px;
+  height: 16px;
+  color: #4a3c32;
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.search-input {
+  width: 100%;
+  height: 32px;
+  padding: 0 0.75rem 0 2.5rem;
+  border: 1.5px solid rgba(193, 127, 89, 0.2);
+  border-radius: 6px;
+  font-size: clamp(0.8rem, 1vw, 0.95rem);
+  background: #ffffff;
+  box-sizing: border-box;
+}
+
+/* Right section - Actions */
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex: 0 1 auto;
+  min-width: 80px;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+/* Add Task Button Styling */
+.add-task-button {
+  padding: clamp(0.25rem, 0.5vw, 0.5rem) clamp(0.5rem, 1vw, 1rem);
+  font-size: clamp(0.75rem, 1vw, 0.9rem);
+  font-weight: 500;
+  color: white;
+  background: linear-gradient(135deg, #c17f59 0%, #a66b4a 100%);
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  flex-shrink: 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.add-task-button svg {
+  width: clamp(16px, 2vw, 20px);
+  height: clamp(16px, 2vw, 20px);
+  margin-right: 0.5rem;
+}
+
+/* Settings Button Styling */
+.settings-button {
+  width: clamp(32px, 4vw, 36px);
+  height: clamp(32px, 4vw, 36px);
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #4a3c32;
+  border-radius: 6px;
+  flex-shrink: 0;
+}
+
+.settings-button svg {
+  width: clamp(16px, 3vw, 20px);
+  height: clamp(16px, 3vw, 20px);
+}
+
+/* Adjust main content to account for fixed header */
+.kanban-board {
+  padding-top: 80px; /* Header height + padding */
+}
+
+/* Dark mode adjustments */
+.dark-mode .header {
+  background: #1a1a1a;
+  border-bottom-color: rgba(255, 255, 255, 0.1);
+}
+
+.dark-mode .header-title {
+  color: #ffffff;
+}
+
+.dark-mode .search-icon {
+  color: #ffffff;
+  opacity: 0.5;
+}
+
+.dark-mode .search-input {
+  background: #2d2d2d;
+  border-color: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+}
+
+.dark-mode .search-input:focus {
+  border-color: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.05);
+}
+
+.dark-mode .add-task-button {
+  background: linear-gradient(135deg, #8b5b3d 0%, #6b4730 100%);
+}
+
+.dark-mode .add-task-button:hover {
+  background: linear-gradient(135deg, #7a503a 0%, #5a3c2a 100%);
+}
+
+.dark-mode .settings-button {
+  color: #ffffff;
+}
+
+.dark-mode .settings-button:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Settings panel */
+.settings-panel {
+  max-width: 400px;
+}
+
+.settings-content {
+  padding: 1rem 0;
+}
+
+.setting-item {
+  padding: 1rem;
+  border-radius: 8px;
+  background: rgba(193, 127, 89, 0.05);
+  margin-bottom: 1rem;
+}
+
+.setting-label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 500;
+}
+
+/* Toggle switch */
+.toggle-switch {
+  position: relative;
+  width: 50px;
+  height: 24px;
+}
+
+.toggle-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.toggle-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: .4s;
+  border-radius: 34px;
+}
+
+.toggle-slider:before {
+  position: absolute;
+  content: "";
+  height: 16px;
+  width: 16px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  transition: .4s;
+  border-radius: 50%;
+}
+
+input:checked + .toggle-slider {
+  background-color: #c17f59;
+}
+
+input:checked + .toggle-slider:before {
+  transform: translateX(26px);
+}
+
+/* Dark mode styles */
+.dark-mode {
+  background-color: #1a1a1a !important;
+  color: #ffffff;
+}
+
+.dark-mode .kanban-board {
+  background-color: #1a1a1a;
+}
+
+.dark-mode .column {
+  background: #2d2d2d;
+  border-color: #3d3d3d;
+}
+
+.dark-mode .item {
+  background-color: rgba(45, 45, 45, 0.95);
+}
+
+.dark-mode .item[style*="background"] {
+  background-color: rgba(193, 127, 89, var(--opacity)) !important;
+}
+
+/* Ensure dark mode colors are more visible */
+.dark-mode .item {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.dark-mode .item[style*="background"] {
+  border-color: rgba(193, 127, 89, calc(var(--opacity) + 0.1));
+}
+
+.dark-mode .modal-panel {
+  background: #2d2d2d;
+  color: #ffffff;
+}
+
+.dark-mode .setting-item {
+  border-color: #3d3d3d;
+}
+
+.dark-mode .kanban-title {
+  color: #ffffff;
+}
+
+.dark-mode .column h2 {
+  color: #ffffff;
+  border-color: #3d3d3d;
+}
+
+.dark-mode .item h3 {
+  color: #ffffff;
+}
+
+.dark-mode .item p {
+  color: #b0b0b0;
+}
+
+/* Priority input styling */
+.priority-input {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.priority-input label {
+  font-size: 0.9rem;
+  color: #4a3c32;
+}
+
+.priority-input input {
+  padding: 0.5rem;
+  border: 1px solid #e6d5c9;
+  border-radius: 4px;
+  width: 100%;
+}
+
+/* Dark mode adjustments */
+.dark-mode .priority-input label {
+  color: #ffffff;
+}
+
+/* Date inputs styling */
+.date-inputs {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.date-input {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.date-input label {
+  font-size: 0.9rem;
+  color: #4a3c32;
+}
+
+.date-input input {
+  padding: 0.5rem;
+  border: 1px solid #e6d5c9;
+  border-radius: 4px;
+  width: 100%;
+}
+
+/* Task dates styling */
+.task-dates {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  font-size: 0.8rem;
+}
+
+.date {
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.start-date {
+  color: #4a3c32;
+}
+
+.due-date {
+  color: #c17f59;
+}
+
+/* Dark mode adjustments */
+.dark-mode .date-input label {
+  color: #ffffff;
+}
+
+.dark-mode .date {
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.dark-mode .start-date {
+  color: #b0b0b0;
+}
+
+.dark-mode .due-date {
+  color: #e6b69e;
+}
+
+@media (max-width: 480px) {
+  .date-inputs {
+    flex-direction: column;
+  }
+}
+
+/* Updated Labels styling */
+.label-input-group {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+  align-items: center;
+}
+
+.label-text-input {
+  flex: 1;
+  padding: 0.5rem;
+  border: 1px solid #e6d5c9;
+  border-radius: 4px;
+}
+
+.label-color-picker {
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  background: none;
+}
+
+.label-color-picker::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+
+.label-color-picker::-webkit-color-swatch {
+  border: 2px solid #e6d5c9;
+  border-radius: 4px;
+}
+
+.add-label-btn {
+  padding: 0.5rem 1rem;
+  background: #c17f59;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.labels-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.label {
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  color: white;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+/* Dark mode adjustments */
+.dark-mode .label-text-input {
+  background-color: #3d3d3d;
+  border-color: #4d4d4d;
+  color: #ffffff;
+}
+
+.dark-mode .label-color-picker::-webkit-color-swatch {
+  border-color: #4d4d4d;
+}
+
+.dark-mode .add-label-btn:hover {
+  background: #8b5b3d;
+}
+
+/* Make labels more readable */
+.label {
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+}
+
+/* Edit Panel Styling */
+.edit-panel-wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  backdrop-filter: blur(4px);
+}
+
+.modal-panel {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 2rem;
+  width: 90%;
+  max-width: 600px;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
+}
+
+.dark-mode .edit-panel-wrapper {
+  background: rgba(0, 0, 0, 0.7);
+}
+
+.dark-mode .modal-panel {
+  background: #2d2d2d;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Scrollbar styling */
+.modal-panel::-webkit-scrollbar {
+  width: 8px;
+}
+
+.modal-panel::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 4px;
+}
+
+.modal-panel::-webkit-scrollbar-thumb {
+  background: rgba(193, 127, 89, 0.5);
+  border-radius: 4px;
+}
+
+.dark-mode .modal-panel::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.dark-mode .modal-panel::-webkit-scrollbar-thumb {
+  background: rgba(193, 127, 89, 0.3);
+}
+
+/* Update Task Button Styling */
+.update-button {
+  width: 100%;
+  padding: 1rem 1.5rem;
+  margin-top: 2rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: white;
+  background: linear-gradient(135deg, #c17f59 0%, #a66b4a 100%);
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(193, 127, 89, 0.2);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  position: relative;
+  overflow: hidden;
+}
+
+.update-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.update-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(193, 127, 89, 0.3);
+  background: linear-gradient(135deg, #b37350 0%, #955f42 100%);
+}
+
+.update-button:hover::before {
+  opacity: 1;
+}
+
+.update-button:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 10px rgba(193, 127, 89, 0.2);
+}
+
+/* Dark Mode */
+.dark-mode .update-button {
+  background: linear-gradient(135deg, #8b5b3d 0%, #6b4730 100%);
+  box-shadow: 0 4px 15px rgba(139, 91, 61, 0.3);
+}
+
+.dark-mode .update-button:hover {
+  background: linear-gradient(135deg, #7a503a 0%, #5a3c2a 100%);
+  box-shadow: 0 6px 20px rgba(139, 91, 61, 0.4);
+}
+
+/* Ensure button stays at bottom of form */
+.modal-panel form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  position: relative;
+  padding-bottom: 1rem;
+}
+
+/* Add loading state styling */
+.update-button.loading {
+  position: relative;
+  color: transparent;
+}
+
+.update-button.loading::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  margin: -10px 0 0 -10px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: button-loading 0.8s infinite linear;
+}
+
+@keyframes button-loading {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Header Component Styling */
+.header {
+  width: 100%;
+  background: #ffffff;
+  padding: 1rem 0;
+}
+
+.header-content {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.header-title {
+  font-size: clamp(1.2rem, 3vw, 1.8rem);
+  color: #4a3c32;
+  white-space: nowrap;
+  margin: 0;
+}
+
+.header-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+}
+
+.add-task-button {
+  padding: 0.75rem 1.5rem;
+  font-size: 0.9rem;
+  background: linear-gradient(135deg, #c17f59 0%, #a66b4a 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.settings-button {
+  background: none;
+  border: none;
+  padding: 0.5rem;
+  cursor: pointer;
+  color: #4a3c32;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+/* Dark mode adjustments */
+.dark-mode .header {
+  background: #1a1a1a;
+}
+
+.dark-mode .header-title {
+  color: #ffffff;
+}
+
+.dark-mode .settings-button {
+  color: #ffffff;
+}
+
+.dark-mode .settings-button:hover {
+  background-color: rgba(255, 255, 255, 0.1);
 }
 
 

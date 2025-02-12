@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
 import Task from './components/Task'
 import ModalPanel from './Components/ModalPanel'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
+import Settings from './Components/Settings'
+import SearchBar from './Components/SearchBar'
+import Header from './Components/Header'
 
 function App() {
   const onDragStart = () => {
@@ -71,11 +72,45 @@ function App() {
   }, [tasks]);
 
   const [showModal, setShowModal] = useState(false)
-  
+  const [darkMode, setDarkMode] = useState(() => {
+    const saved = localStorage.getItem('darkMode')
+    return saved ? JSON.parse(saved) : false
+  })
+
+  useEffect(() => {
+    localStorage.setItem('darkMode', JSON.stringify(darkMode))
+    if (darkMode) {
+      document.body.classList.add('dark-mode')
+    } else {
+      document.body.classList.remove('dark-mode')
+    }
+  }, [darkMode])
+
+  const [searchQuery, setSearchQuery] = useState('');
+
+  // Filter tasks based on search query
+  const filteredTasks = tasks.filter(task => {
+    const searchLower = searchQuery.toLowerCase();
+    return (
+      task.title.toLowerCase().includes(searchLower) ||
+      task.description.toLowerCase().includes(searchLower) ||
+      task.labels?.some(label => label.text.toLowerCase().includes(searchLower)) ||
+      task.subtasks?.some(subtask => subtask.text.toLowerCase().includes(searchLower))
+    );
+  });
+
+  const handleSearch = (query) => {
+    setSearchQuery(query);
+  };
+
   return (
-    <div className='kanban-board'>
-      <h1 className='kanban-title'>Kanban Board</h1>
-      <button className='add-task-button' onClick={() => setShowModal(true)}>Add Task</button>
+    <div className={`kanban-board ${darkMode ? 'dark-mode' : ''}`}>
+      <Header 
+        onSearch={handleSearch}
+        darkMode={darkMode}
+        setDarkMode={setDarkMode}
+        setShowModal={setShowModal}
+      />
       {showModal && <ModalPanel setShowModal={setShowModal} tasks={tasks} setTasks={setTasks} />}
       <DragDropContext onDragStart={onDragStart} onDragEnd={onDragEnd}>
         <div className="columns-container">
@@ -92,7 +127,7 @@ function App() {
                     ref={provided.innerRef}
                     {...provided.droppableProps}
                   >
-                    {tasks
+                    {filteredTasks
                       .filter(task => task.status === column.id)
                       .map((task, index) => (
                         <Draggable 
