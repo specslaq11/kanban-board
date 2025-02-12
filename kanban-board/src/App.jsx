@@ -1,10 +1,8 @@
 import { useState, useEffect } from 'react'
 import './App.css'
-import Task from './components/Task'
+import Task from './Components/Task'
 import ModalPanel from './Components/ModalPanel'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
-import Settings from './Components/Settings'
-import SearchBar from './Components/SearchBar'
 import Header from './Components/Header'
 
 function App() {
