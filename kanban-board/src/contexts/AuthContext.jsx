@@ -56,7 +56,7 @@ export function AuthProvider({ children }) {
 
     const login = async (email, password) => {
         try {
-            const res = await fetch(`${config.apiUrl}/auth/login`, {
+            const res = await fetch(`${config.apiUrl}/api/auth/login`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -65,6 +65,10 @@ export function AuthProvider({ children }) {
                 credentials: 'include',
                 body: JSON.stringify({ email, password })
             });
+
+            if (res.status === 502 || res.status === 500) {
+                throw new Error('Server error - please try again later');
+            }
 
             const data = await res.json();
             
@@ -75,6 +79,9 @@ export function AuthProvider({ children }) {
             setCurrentUser(data.user);
         } catch (error) {
             console.error('Login error:', error);
+            if (error.message.includes('CORS')) {
+                throw new Error('Connection error - please try again later');
+            }
             throw error;
         }
     };
