@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { LoadingSpinner } from './LoadingSpinner';
-import './login.css';
 
 function Login({ onClose }) {
     const [email, setEmail] = useState('');

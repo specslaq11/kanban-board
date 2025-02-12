@@ -1542,10 +1542,17 @@ input:checked + .toggle-slider:before {
   letter-spacing: 0.5px;
 }
 
-.auth-submit-button:hover {
+.auth-submit-button:hover:not(:disabled) {
   background: linear-gradient(135deg, #a66b4a 0%, #8b5b3d 100%);
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(193, 127, 89, 0.3);
+}
+
+.auth-submit-button:disabled {
+  background: #cccccc;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
 }
 
 .error-message {
@@ -1556,23 +1563,57 @@ input:checked + .toggle-slider:before {
   font-size: 0.9rem;
 }
 
-/* Dark mode adjustments */
+/* Dark mode auth form styles */
 .dark-mode .auth-form input {
-  background: #3d3d3d;
+  background: #2d2d2d;
   border-color: rgba(255, 255, 255, 0.1);
   color: #ffffff;
+}
+
+.dark-mode .auth-form input:focus {
+  border-color: #c17f59;
+  box-shadow: 0 0 0 2px rgba(193, 127, 89, 0.2);
 }
 
 .dark-mode .auth-submit-button {
   background: linear-gradient(135deg, #8b5b3d 0%, #6b4730 100%);
 }
 
-.dark-mode .auth-submit-button:hover {
+.dark-mode .auth-submit-button:hover:not(:disabled) {
   background: linear-gradient(135deg, #7a503a 0%, #5a3c2a 100%);
 }
 
 .dark-mode .error-message {
   background: rgba(255, 68, 68, 0.2);
+}
+
+/* Loading Spinner */
+.spinner-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(193, 127, 89, 0.1);
+  border-radius: 50%;
+  border-top-color: #c17f59;
+  animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Dark mode spinner */
+.dark-mode .spinner {
+  border-color: rgba(255, 255, 255, 0.1);
+  border-top-color: #ffffff;
 }
 
 
