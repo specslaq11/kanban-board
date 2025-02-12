@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import config from '../config';
-import { LoadingSpinner } from '../components/LoadingSpinner';
+import { LoadingSpinner } from '../Components/LoadingSpinner';
 
 const AuthContext = createContext();
 
