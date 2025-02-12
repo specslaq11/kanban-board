@@ -4,7 +4,7 @@ const API_URL = config.apiUrl;
 
 export const api = {
     async getTasks(token) {
-        const response = await fetch(`${API_URL}/tasks`, {
+        const response = await fetch(`${API_URL}/api/tasks`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -17,7 +17,7 @@ export const api = {
     },
 
     async createTask(task, token) {
-        const response = await fetch(`${API_URL}/tasks`, {
+        const response = await fetch(`${API_URL}/api/tasks`, {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -33,7 +33,7 @@ export const api = {
     },
 
     async updateTask(taskId, updates, token) {
-        const response = await fetch(`${API_URL}/tasks/${taskId}`, {
+        const response = await fetch(`${API_URL}/api/tasks/${taskId}`, {
             method: 'PUT',
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -49,7 +49,7 @@ export const api = {
     },
 
     async deleteTask(taskId, token) {
-        const response = await fetch(`${API_URL}/tasks/${taskId}`, {
+        const response = await fetch(`${API_URL}/api/tasks/${taskId}`, {
             method: 'DELETE',
             headers: {
                 'Authorization': `Bearer ${token}`

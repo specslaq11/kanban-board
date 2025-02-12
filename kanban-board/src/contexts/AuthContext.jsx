@@ -14,7 +14,7 @@ export function AuthProvider({ children }) {
 
     useEffect(() => {
         if (token) {
-            fetch(`${config.apiUrl}/auth/me`, {
+            fetch(`${config.apiUrl}/api/auth/me`, {
                 headers: {
                     'Authorization': `Bearer ${token}`,
                     'X-CSRF-TOKEN': getCsrfToken(),
@@ -88,7 +88,7 @@ export function AuthProvider({ children }) {
 
     const register = async (name, email, password) => {
         try {
-            const res = await fetch(`${config.apiUrl}/auth/register`, {
+            const res = await fetch(`${config.apiUrl}/api/auth/register`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -118,7 +118,7 @@ export function AuthProvider({ children }) {
 
     const logout = async () => {
         try {
-            await fetch(`${config.apiUrl}/auth/logout`, {
+            await fetch(`${config.apiUrl}/api/auth/logout`, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`,
