@@ -66,8 +66,13 @@ export function AuthProvider({ children }) {
                 body: JSON.stringify({ email, password })
             });
 
+            console.log('Login response status:', res.status);
             if (res.status === 502 || res.status === 500) {
                 throw new Error('Server error - please try again later');
+            }
+
+            if (res.status === 404) {
+                throw new Error('API endpoint not found');
             }
 
             const data = await res.json();
@@ -79,6 +84,10 @@ export function AuthProvider({ children }) {
             setCurrentUser(data.user);
         } catch (error) {
             console.error('Login error:', error);
+            console.error('Login error details:', {
+                message: error.message,
+                stack: error.stack
+            });
             if (error.message.includes('CORS')) {
                 throw new Error('Connection error - please try again later');
             }
