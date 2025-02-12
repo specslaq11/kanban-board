@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import config from '../config';
+import { LoadingSpinner } from '../components/LoadingSpinner';
 
 const AuthContext = createContext();
 
@@ -11,6 +12,7 @@ export function AuthProvider({ children }) {
     const [currentUser, setCurrentUser] = useState(null);
     const [loading, setLoading] = useState(true);
     const [token, setToken] = useState(localStorage.getItem('token'));
+    const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
         if (token) {
@@ -56,6 +58,7 @@ export function AuthProvider({ children }) {
 
     const login = async (email, password) => {
         try {
+            setIsLoading(true);
             const res = await fetch(`${config.apiUrl}/auth/login`, {
                 method: 'POST',
                 headers: {
@@ -92,11 +95,14 @@ export function AuthProvider({ children }) {
                 throw new Error('Connection error - please try again later');
             }
             throw error;
+        } finally {
+            setIsLoading(false);
         }
     };
 
     const register = async (name, email, password) => {
         try {
+            setIsLoading(true);
             const res = await fetch(`${config.apiUrl}/auth/register`, {
                 method: 'POST',
                 headers: {
@@ -122,6 +128,8 @@ export function AuthProvider({ children }) {
         } catch (error) {
             console.error('Register error:', error);
             throw error;
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -145,6 +153,7 @@ export function AuthProvider({ children }) {
     const value = {
         currentUser,
         token,
+        isLoading,
         login,
         register,
         logout
@@ -152,7 +161,7 @@ export function AuthProvider({ children }) {
 
     return (
         <AuthContext.Provider value={value}>
-            {!loading && children}
+            {loading ? <LoadingSpinner /> : children}
         </AuthContext.Provider>
     );
 } 
