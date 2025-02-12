@@ -18,7 +18,7 @@ app.use(helmet());
 const allowedOrigins = [
     process.env.FRONTEND_URL,
     'http://localhost:5173',
-    'https://your-netlify-app.netlify.app' // Add your Netlify domain
+    'https://daghantodo.netlify.app'
 ];
 
 app.use(cors({
